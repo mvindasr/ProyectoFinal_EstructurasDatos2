@@ -12,7 +12,7 @@ public class UI extends ApplicationUI {
         out.println("2. Buscar ubicación.");
         out.println("3. Mostrar camino mínimo.");
         out.println("4. Mostrar camino máximo.");
-        out.println("4. Salir.");
+        out.println("5. Salir.");
         out.println("═══════════════════════════════");
         out.println("Digite la opción: ");
     }

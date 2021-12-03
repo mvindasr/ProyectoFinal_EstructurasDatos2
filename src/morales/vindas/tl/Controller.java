@@ -34,7 +34,7 @@ public class Controller {
             opcion = interfaz.leerOpcion();
             procesarOpcion(opcion);
         }
-        while (opcion != 4);
+        while (opcion != 5);
     }
 
     public void procesarOpcion(int pOpcion) throws Exception {
@@ -63,17 +63,20 @@ public class Controller {
         interfaz.imprimirMensaje(localGestor.mostrarUbicaciones());
     }
 
-    public void mostrarMinimo() {
-        String origen = "";
-        String destino = "";
-
+    public void mostrarMinimo() throws IOException {
+        interfaz.imprimirMensaje("Ingrese la ubicación origen:");
+        String origen = interfaz.leerTexto();
+        interfaz.imprimirMensaje("Ingrese la ubicación destino:");
+        String destino = interfaz.leerTexto();
         interfaz.imprimirMensaje(localGestor.mostrarRecorrido(origen, destino, 0));
 
     }
 
-    public void mostrarMaximo() {
-        String origen = "";
-        String destino = "";
+    public void mostrarMaximo() throws IOException {
+        interfaz.imprimirMensaje("Ingrese la ubicación origen:");
+        String origen = interfaz.leerTexto();
+        interfaz.imprimirMensaje("Ingrese la ubicación destino:");
+        String destino = interfaz.leerTexto();
 
         interfaz.imprimirMensaje(localGestor.mostrarRecorrido(origen, destino, 1));
 
@@ -209,7 +212,7 @@ public class Controller {
         mensaje += "\n" + localGestor.agregarArco("Upala", "Tilarán");
         mensaje += "\n" + localGestor.agregarArco("Upala", "Liberia");
 
-        interfaz.imprimirMensaje(mensaje);
+        /*interfaz.imprimirMensaje(mensaje);*/
 
     }
 }

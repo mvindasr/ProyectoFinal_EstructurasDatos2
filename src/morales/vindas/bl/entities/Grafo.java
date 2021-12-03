@@ -1,5 +1,7 @@
 package morales.vindas.bl.entities;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static morales.vindas.bl.helpers.Algorithms.haversine;
@@ -30,7 +32,7 @@ public class Grafo {
 
 
     public String mostrarRecorrido(String pOrigen, String pDestino, int pRecorrido) {
-        return "";
+        return dijkstra(pOrigen, pDestino, pRecorrido);
     }
 
     public String mostrarMaximo(String pOrigen, String pDestino) {
@@ -203,11 +205,12 @@ public class Grafo {
         return String.valueOf(mensaje);
     }
 
-    /*private StringBuilder dijkstra(String pOrigen, String pDestino, int pRecorrido) {
+    private String dijkstra(String pOrigen, String pDestino, int pRecorrido) {
 
         Optional<NodoVertice> isOrigen = encontrarVertice(pOrigen);
         Optional<NodoVertice> isDestino = encontrarVertice(pDestino);
         StringBuilder mensaje = new StringBuilder("\n");
+        String text;
 
         if (isOrigen.isPresent() && isDestino.isPresent()) {
             NodoVertice nodoOrigen = isOrigen.get();
@@ -225,36 +228,45 @@ public class Grafo {
 
             for (NodoArco posibleDestino : destinos) {
                 if(posibleDestino.getDestino().equals(nodoDestino)) {
-                    mensaje.append("\n");
+                    System.out.println("Eureca!");
                 }
                 else {
                     //No se encontró lo que se buscaba.
-                    if (dijkstraRecursivo(posibleDestino.getDestino(), nodoDestino, new ArrayList<>(), rutas, arcos))
+                    List<NodoVertice> ruta = new ArrayList<>();
+                    ruta.add(nodoOrigen);
+                    List<NodoArco> arco = new ArrayList<>();
+                    arco.add(posibleDestino);
+                    if (dijkstraRecursivo(posibleDestino.getDestino(), nodoDestino, ruta, arco, rutas, arcos))
                     {
-                        System.out.println(rutas);
+                        text = "ok";
                     }
 
                 }
             }
-            System.out.println(rutas);
+
 
             int i = 0;
-            SortedMap<Integer, String> rutasOrdenadas = new TreeMap<>();
-            for (List<NodoArco> ruta : rutas) {
-                i++;
-                int peso = 0;
-                String currentVerose = "Ruta: " + i + " : " + ruta.get(0).getOrigen().getLabel();
-                for ( NodoArco nodo : ruta) {
-                    currentVerose += " -> " + nodo.getDestino().getLabel() ;
+            SortedMap<Double, String> rutasOrdenadas = new TreeMap<>();
+            for (List<NodoArco> arco : arcos) {
+                double peso = 0;
+                String currentRuta = "Ruta No. " + i+1 + " : " + nodoOrigen.getLabel();
+                for ( NodoArco nodo : arco) {
+                    currentRuta += " -> " + nodo.getDestino().getLabel() ;
                     peso += nodo.getPeso();
                 }
-                currentVerose += " Peso: " + peso + '\n';
-                System.out.print(currentVerose);
-                verboseRutas.put(peso, currentVerose);
+                BigDecimal bd = new BigDecimal(peso).setScale(2, RoundingMode.HALF_UP);
+                double pesoFormat = bd.doubleValue();
+                currentRuta += " *** Distancia: " + pesoFormat  + "*** \n";
+                rutasOrdenadas.put(pesoFormat, currentRuta);
+                i++;
             }
 
-            System.out.print("La mas rapida: " + verboseRutas.get(verboseRutas.firstKey()));
-            System.out.println("La mas lenta: " + verboseRutas.get(verboseRutas.lastKey()));
+            if (pRecorrido == 0) {
+                mensaje.append(rutasOrdenadas.get(rutasOrdenadas.firstKey()));
+            }
+            else {
+                mensaje.append(rutasOrdenadas.get(rutasOrdenadas.lastKey()));
+            }
 
         }
 
@@ -262,40 +274,41 @@ public class Grafo {
             mensaje.append("La ubicación origen y/o destino no se encuentran registradas.");
         }
 
-        return mensaje;
+        return String.valueOf(mensaje);
 
 
     }
 
-    public boolean dijkstraRecursivo(NodoVertice nodoOrigen, NodoVertice nodoDestino, List<NodoVertice> ruta, List<List<NodoVertice>> rutas, List<List<NodoArco>> arcos) {
+    public boolean dijkstraRecursivo(NodoVertice nodoOrigen, NodoVertice nodoDestino, List<NodoVertice> ruta, List <NodoArco> arco, List<List<NodoVertice>> rutas, List<List<NodoArco>> arcos) {
 
+        //Proceso de obtención de nodos siguientes.
+        List<NodoArco> destinosR = mapAdy.get(nodoOrigen);
 
+        for (NodoArco posibleDestinoR : destinosR) {
 
-        //processo de obtencion de nodos siguientes.
-        List<NodoArco> destinos = mapAdy.get(nodoOrigen);
-        System.out.println("Nodo actual: " + nodoDePartida.getOrigen().getLabel());
-        ruta.add(nodoDePartida);
-
-
-
-        for (NodoArco posibleDestino : destinos) {
-
-            //Salva guarda contra retornos infinitos.
-            if(posibleDestino.getDestino().equals(ruta.get(0)))
+            //Salvaguarda contra retornos infinitos.
+            if (ruta.contains(nodoOrigen)) {
                 return  false;
+            }
 
-            List<NodoArcoLista> nRuta = new ArrayList<>();
+            List<NodoVertice> nRuta = new ArrayList<>();
+            List<NodoArco> nArco = new ArrayList<>();
             nRuta.addAll(ruta);
-            if(posibleDestino.getDestino().getLabel().equals(claveDeBusqueda)){
-                System.out.println("Eureca!");
-                nRuta.add(posibleDestino);
+            nArco.addAll(arco);
+
+            if(posibleDestinoR.getDestino().getLabel().equals(nodoDestino.getLabel())){
+                nArco.add(posibleDestinoR);
+                arcos.add(nArco);
+                nRuta.add(nodoOrigen);
                 rutas.add(nRuta);
             } else {
-                SubBusqueda(posibleDestino, claveDeBusqueda, nRuta, nodoVerticeList, nodoArcoListaList,rutas);
+
+                nRuta.add(nodoOrigen);
+                nArco.add(posibleDestinoR);
+                dijkstraRecursivo(posibleDestinoR.getDestino(), nodoDestino, nRuta, nArco, rutas, arcos);
             }
         }
         return false;
 
-
-    }*/
+    }
 }

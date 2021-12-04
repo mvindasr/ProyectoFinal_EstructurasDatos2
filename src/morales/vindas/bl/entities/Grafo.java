@@ -206,10 +206,11 @@ public class Grafo {
 
         if (ubicacion.isPresent()) {
 
-            mensaje.append("╔════════════════════════════════════════════════╗\n");
-            mensaje.append("             Ubicación: ").append(pUbicacion).append("\n");
-            mensaje.append("╚════════════════════════════════════════════════╝\n");
+            mensaje.append("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+            mensaje.append("                                                        Ubicación: ").append(pUbicacion).append("\n");
+            mensaje.append("╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
             mensaje.append("Coordenadas: ").append(ubicacion.get().getX()).append(", ").append(ubicacion.get().getY()).append("\n");
+
 
             mensaje.append("Destinos: ");
             if (mapAdy.get(ubicacion.get()) != null) {
@@ -233,8 +234,12 @@ public class Grafo {
                     }
                 }
             }
+            mensaje.append("\n═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
         }
 
+        else {
+            mensaje.append("No existe una ubicación registrada con ese nombre.");
+        }
 
         return String.valueOf(mensaje);
     }
@@ -298,7 +303,7 @@ public class Grafo {
                     }
                     BigDecimal bd = new BigDecimal(peso).setScale(2, RoundingMode.HALF_UP);
                     double pesoFormat = bd.doubleValue();
-                    currentRuta.append(" *** Distancia: ").append(pesoFormat).append(" ***\n");
+                    currentRuta.append(" *** Distancia: ").append(pesoFormat).append(" km ***\n");
                     rutasOrdenadas.put(pesoFormat, currentRuta.toString());
                     i++;
                 }

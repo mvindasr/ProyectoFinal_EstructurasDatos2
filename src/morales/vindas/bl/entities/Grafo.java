@@ -198,6 +198,7 @@ public class Grafo {
 
     /**
      * Método que devuelve un mensaje con la información de una ubicación registrada
+     * @param pUbicacion La etiqueta del vértice consultado
      * @return El String que muestra la información de la ubicación
      */
     private String mostrarUbicacionUnica(String pUbicacion) {

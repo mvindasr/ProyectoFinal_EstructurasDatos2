@@ -4,7 +4,10 @@ package morales.vindas.bl.helpers;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-
+/**
+ * Clase que contiene algoritmos generales utilizados en la aplicación
+ * @author Carlos Morales, Milton Vindas - Estructuras de Datos 2 - III-2021
+ */
 public class Algorithms {
 
     /**

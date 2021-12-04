@@ -2,6 +2,10 @@ package morales.vindas.bl.logic;
 
 import morales.vindas.dl.Data;
 
+/**
+ * Clase que se encarga de gestar la comunicación entre el controlador y la capa de datos
+ * @author Carlos Morales, Milton Vindas - Estructuras de Datos 2 - III-2021
+ */
 public class Gestor {
 
     private final Data db;

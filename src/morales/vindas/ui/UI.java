@@ -1,6 +1,9 @@
 package morales.vindas.ui;
 
-
+/**
+ * Clase que se encarga de imprimir el menú de opciones
+ * @author Carlos Morales, Milton Vindas - Estructuras de Datos 2 - III-2021
+ */
 public class UI extends ApplicationUI {
 
     @Override

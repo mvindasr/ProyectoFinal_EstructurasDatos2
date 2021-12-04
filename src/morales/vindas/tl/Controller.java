@@ -1,20 +1,20 @@
 package morales.vindas.tl;
 
 import morales.vindas.bl.logic.Gestor;
-import morales.vindas.ui.TipoGrafo;
 import morales.vindas.ui.UI;
 
 import java.io.IOException;
 
-
+/**
+ * Clase que representa el controlador de la aplicación que comunica la interfaz de usuario con la lógica de negocio
+ * @author Carlos Morales, Milton Vindas - Estructuras de Datos 2 - III-2021
+ */
 public class Controller {
     private UI interfaz;
-    private TipoGrafo menuGrafo;
     private Gestor localGestor;
 
     public Controller() {
         interfaz = new UI();
-        menuGrafo = new TipoGrafo();
     }
 
     public void iniciar() throws Exception {
@@ -23,9 +23,9 @@ public class Controller {
 
         localGestor = new Gestor();
 
-        menuGrafo.imprimirMensaje("*******************************************************************************");
-        menuGrafo.imprimirMensaje("*****      Bienvenido al Proyecto de Mapa de Estructuras de Datos 2      ******");
-        menuGrafo.imprimirMensaje("*******************************************************************************");
+        interfaz.imprimirMensaje("*******************************************************************************");
+        interfaz.imprimirMensaje("*****      Bienvenido al Proyecto de Mapa de Estructuras de Datos 2      ******");
+        interfaz.imprimirMensaje("*******************************************************************************");
 
         cargarInfo();
 

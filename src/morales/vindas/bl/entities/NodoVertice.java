@@ -1,6 +1,9 @@
 package morales.vindas.bl.entities;
 
-
+/**
+ * Clase que representa un nodo vértice del grafo
+ * @author Carlos Morales, Milton Vindas - Estructuras de Datos 2 - III-2021
+ */
 public class NodoVertice {
 
      /**

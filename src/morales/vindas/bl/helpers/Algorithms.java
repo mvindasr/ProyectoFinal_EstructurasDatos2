@@ -1,17 +1,20 @@
 package morales.vindas.bl.helpers;
 
-import morales.vindas.bl.entities.NodoArco;
-import morales.vindas.bl.entities.NodoVertice;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
 
 public class Algorithms {
 
+    /**
+     * Método que devuelve un número con la distancia entre dos puntos terrestres
+     * @param lat1 La latitud del punto 1
+     * @param lat2 La latitud del punto 2
+     * @param lon1 La longitud del punto 1
+     * @param lon2 La longitud del punto 2
+     * @return Devuelve la distancia entre los dos puntos
+     */
     public static double haversine(double lat1, double lat2, double lon1, double lon2) {
 
         // Convierte grados a radianes

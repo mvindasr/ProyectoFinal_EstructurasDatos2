@@ -1,7 +1,19 @@
 package morales.vindas.bl.entities;
 
+/**
+ * Clase que representa un nodo arco del grafo
+ * @author Carlos Morales, Milton Vindas - Estructuras de Datos 2 - III-2021
+ */
 public class NodoArco {
+
+    /**
+     * El nodo vértice que representa el destino en el arco
+     */
     private NodoVertice destino;
+
+    /**
+     * El número que representa el peso del arco
+     */
     private double peso;
 
     public NodoArco(NodoVertice pDestino, double pPeso) {

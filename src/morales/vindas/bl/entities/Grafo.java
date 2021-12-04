@@ -6,11 +6,20 @@ import java.util.*;
 
 import static morales.vindas.bl.helpers.Algorithms.haversine;
 
+/**
+ * Clase que representa un grafo de lista de adyacencia
+ * @author Carlos Morales, Milton Vindas - Estructuras de Datos 2 - III-2021
+ */
 public class Grafo {
 
-
+    /**
+     * El mapa de adyacencia del grafo
+     */
     private Map<NodoVertice, LinkedList<NodoArco>> mapAdy;
 
+    /**
+     * Booleano que determina si el grafo es dirigido o no.
+     */
     private boolean dirigido;
 
     public Grafo(boolean pDirigido) {
@@ -26,19 +35,34 @@ public class Grafo {
         return mostrarUbicacionesTodas();
     }
 
+    /**
+     * Método que retorna un String con los datos de la ubicación consultada
+     * @param pUbicacion El nombre del vértice
+     * @return Retorna el String con la información
+     */
     public String mostrarUbicacion(String pUbicacion) {
         return mostrarUbicacionUnica(pUbicacion);
     }
 
 
+    /**
+     * Método que retorna un string con el tipo de recorrido seleccionado
+     * @param pOrigen El nombre del vértice de origen
+     * @param pDestino El nombre del vértice de destino
+     * @param pRecorrido El tipo de recorrido: 0 es mínimo, 1 es máximo
+     * @return Retorna el String con el recorrido
+     */
     public String mostrarRecorrido(String pOrigen, String pDestino, int pRecorrido) {
         return dijkstra(pOrigen, pDestino, pRecorrido);
     }
 
-    public String mostrarMaximo(String pOrigen, String pDestino) {
-        return "";
-    }
-
+    /**
+     * Método que agrega un vértice al grado
+     * @param pVertice El String con el nombre del vértice
+     * @param pLat La latitud de la ubicación
+     * @param pLon La longitud de la ubicación
+     * @return Retorna el String con el resultado de la operación
+     */
     public String agregarVertice(String pVertice, double pLat, double pLon) {
         return agregarVerticeGrafo(pVertice, pLat, pLon);
     }
@@ -104,6 +128,11 @@ public class Grafo {
         }
     }
 
+    /**
+     * Método que inserta un arco en el mapa de adyacencia
+     * @param pOrigen El vértice origen al cual se le debe agregar el arco
+     * @param pArco El arco por agregar
+     */
     private void insertarArcoProceso (NodoVertice pOrigen, NodoArco pArco){
         LinkedList<NodoArco> tmp = mapAdy.get(pOrigen);
 
@@ -116,6 +145,11 @@ public class Grafo {
         mapAdy.put(pOrigen, tmp);
     }
 
+    /**
+     * Método que devuelve una variable del tipo Optional que puede contener el vértice con la etiqueta ingresada
+     * @param pV La etiqueta del vértice consultado
+     * @return El Optional con el resultado de la consulta
+     */
     private Optional<NodoVertice> encontrarVertice(String pV) {
         NodoVertice v = new NodoVertice(pV);
 

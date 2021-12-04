@@ -213,6 +213,5 @@ public class Controller {
         mensaje += "\n" + localGestor.agregarArco("Upala", "Liberia");
 
         /*interfaz.imprimirMensaje(mensaje);*/
-
     }
 }

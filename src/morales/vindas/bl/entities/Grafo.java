@@ -205,81 +205,105 @@ public class Grafo {
         return String.valueOf(mensaje);
     }
 
+    /**
+     * Método que devuelve el camino máximo o camino mínimo desde el origen al destino
+     * @param pOrigen Nombre de la ubicación origen
+     * @param pDestino Nombre de la ubicación destino
+     * @param pRecorrido El tipo de recorrido: 0 para mínimo, 1 para máximo
+     * @return Retorna el String con el recorrido determinado
+     */
     private String dijkstra(String pOrigen, String pDestino, int pRecorrido) {
 
         Optional<NodoVertice> isOrigen = encontrarVertice(pOrigen);
         Optional<NodoVertice> isDestino = encontrarVertice(pDestino);
         StringBuilder mensaje = new StringBuilder("\n");
-        String text;
 
+
+        //Si existen el vértice origen y destino
         if (isOrigen.isPresent() && isDestino.isPresent()) {
+            boolean dijkstraCompleto = false;
             NodoVertice nodoOrigen = isOrigen.get();
             NodoVertice nodoDestino = isDestino.get();
 
-            //Arreglo de vértices posibles
+            //Arreglo de rutas posibles, utilizado para validación
             List<List<NodoVertice>> rutas = new ArrayList<>();
 
-            //Arreglo de arcos posibles
+            //Arreglo de arcos posibles, utilizado para calcular ruta max y min.
             List<List<NodoArco>> arcos = new ArrayList<>();
 
             //Obtener nodos siguientes a partir del origen.
             List<NodoArco> destinos = mapAdy.get(nodoOrigen);
 
-
+            // Por cada nodo arco registrado para el origen
             for (NodoArco posibleDestino : destinos) {
-                if(posibleDestino.getDestino().equals(nodoDestino)) {
-                    System.out.println("Eureca!");
+                dijkstraCompleto = false;
+                List<NodoVertice> ruta = new ArrayList<>();
+                ruta.add(nodoOrigen);
+                List<NodoArco> arco = new ArrayList<>();
+                arco.add(posibleDestino);
+                // Se encontró vértice destino
+                if (posibleDestino.getDestino().equals(nodoDestino)) {
+                    arcos.add(arco);
+                    dijkstraCompleto = true;
+                } else {
+                    //No se encontró el vértice destino, iniciar recursividad.
+                    dijkstraCompleto = dijkstraRecursivo(posibleDestino.getDestino(), nodoDestino, ruta, arco, rutas, arcos);
                 }
-                else {
-                    //No se encontró lo que se buscaba.
-                    List<NodoVertice> ruta = new ArrayList<>();
-                    ruta.add(nodoOrigen);
-                    List<NodoArco> arco = new ArrayList<>();
-                    arco.add(posibleDestino);
-                    if (dijkstraRecursivo(posibleDestino.getDestino(), nodoDestino, ruta, arco, rutas, arcos))
-                    {
-                        text = "ok";
+            }
+
+            if (dijkstraCompleto) {
+                int i = 1;
+                // Una vez encontrados todos las rutas viables con sus respectivos pesos, ordenarlas según su peso.
+                SortedMap<Double, String> rutasOrdenadas = new TreeMap<>();
+                for (List<NodoArco> arco : arcos) {
+                    double peso = 0;
+                    StringBuilder currentRuta = new StringBuilder("Ruta No. " + i + " : " + nodoOrigen.getLabel());
+                    for (NodoArco nodo : arco) {
+                        currentRuta.append(" -> ").append(nodo.getDestino().getLabel());
+                        peso += nodo.getPeso();
                     }
-
+                    BigDecimal bd = new BigDecimal(peso).setScale(2, RoundingMode.HALF_UP);
+                    double pesoFormat = bd.doubleValue();
+                    currentRuta.append(" *** Distancia: ").append(pesoFormat).append(" ***\n");
+                    rutasOrdenadas.put(pesoFormat, currentRuta.toString());
+                    i++;
                 }
-            }
 
-
-            int i = 0;
-            SortedMap<Double, String> rutasOrdenadas = new TreeMap<>();
-            for (List<NodoArco> arco : arcos) {
-                double peso = 0;
-                String currentRuta = "Ruta No. " + i+1 + " : " + nodoOrigen.getLabel();
-                for ( NodoArco nodo : arco) {
-                    currentRuta += " -> " + nodo.getDestino().getLabel() ;
-                    peso += nodo.getPeso();
+                // Si el recorrido es mínimo
+                if (pRecorrido == 0) {
+                    mensaje.append(rutasOrdenadas.get(rutasOrdenadas.firstKey()));
                 }
-                BigDecimal bd = new BigDecimal(peso).setScale(2, RoundingMode.HALF_UP);
-                double pesoFormat = bd.doubleValue();
-                currentRuta += " *** Distancia: " + pesoFormat  + "*** \n";
-                rutasOrdenadas.put(pesoFormat, currentRuta);
-                i++;
-            }
+                // Si el recorrido es máximo
+                else {
+                    mensaje.append(rutasOrdenadas.get(rutasOrdenadas.lastKey()));
+                }
 
-            if (pRecorrido == 0) {
-                mensaje.append(rutasOrdenadas.get(rutasOrdenadas.firstKey()));
+            } else {
+                mensaje.append("La ubicación origen se encuentra aislada.");
             }
-            else {
-                mensaje.append(rutasOrdenadas.get(rutasOrdenadas.lastKey()));
-            }
-
         }
 
+
+        // No hay vértices con los nombres registrados
         else {
             mensaje.append("La ubicación origen y/o destino no se encuentran registradas.");
         }
 
+        // Retornar la cadena de Strings con la ruta óptima y su peso
         return String.valueOf(mensaje);
-
-
     }
 
-    public boolean dijkstraRecursivo(NodoVertice nodoOrigen, NodoVertice nodoDestino, List<NodoVertice> ruta, List <NodoArco> arco, List<List<NodoVertice>> rutas, List<List<NodoArco>> arcos) {
+    /**
+     * Método recursivo del algoritmo de dijkstra para determinar recorridos
+     * @param nodoOrigen El vértice utilizado como origen de la recursividad
+     * @param nodoDestino El vértice destino definido por el usuario
+     * @param ruta La lista de vértices que definen la ruta actual
+     * @param arco La lista de arcos que definen la ruta actual
+     * @param rutas La lista de listas de rutas viables para llegar del origen al destino
+     * @param arcos La lista de listas de arcos viables para llegar del origen al destino
+     * @return Retorna un booleano que indica si la recursividad actual está completa
+     */
+    private boolean dijkstraRecursivo(NodoVertice nodoOrigen, NodoVertice nodoDestino, List<NodoVertice> ruta, List <NodoArco> arco, List<List<NodoVertice>> rutas, List<List<NodoArco>> arcos) {
 
         //Proceso de obtención de nodos siguientes.
         List<NodoArco> destinosR = mapAdy.get(nodoOrigen);
@@ -288,27 +312,26 @@ public class Grafo {
 
             //Salvaguarda contra retornos infinitos.
             if (ruta.contains(nodoOrigen)) {
-                return  false;
+                return true;
             }
 
-            List<NodoVertice> nRuta = new ArrayList<>();
-            List<NodoArco> nArco = new ArrayList<>();
-            nRuta.addAll(ruta);
-            nArco.addAll(arco);
+            List<NodoVertice> nRuta = new ArrayList<>(ruta);
+            List<NodoArco> nArco = new ArrayList<>(arco);
 
+            // Si llega al vértice destino
             if(posibleDestinoR.getDestino().getLabel().equals(nodoDestino.getLabel())){
                 nArco.add(posibleDestinoR);
                 arcos.add(nArco);
                 nRuta.add(nodoOrigen);
                 rutas.add(nRuta);
-            } else {
-
+            }
+            //Continúa buscando en la recursividad
+            else {
                 nRuta.add(nodoOrigen);
                 nArco.add(posibleDestinoR);
                 dijkstraRecursivo(posibleDestinoR.getDestino(), nodoDestino, nRuta, nArco, rutas, arcos);
             }
         }
-        return false;
-
+        return true;
     }
 }

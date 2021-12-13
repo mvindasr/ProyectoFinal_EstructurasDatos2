@@ -21,12 +21,6 @@ public class NodoArco {
         this.peso = pPeso;
     }
 
-    public NodoArco(NodoVertice origen, NodoVertice destino, double peso) {
-        this.destino = destino;
-        this.peso = peso;
-    }
-
-
     public NodoVertice getDestino() {
         return destino;
     }

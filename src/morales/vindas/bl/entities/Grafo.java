@@ -309,14 +309,20 @@ public class Grafo {
                     i++;
                 }
 
-                // Si el recorrido es mínimo
-                if (pRecorrido == 0) {
-                    mensaje.append(rutasOrdenadas.get(rutasOrdenadas.firstKey()));
+                if (rutasOrdenadas.size()!=0) {
+                    // Si el recorrido es mínimo
+                    if (pRecorrido == 0) {
+                        mensaje.append(rutasOrdenadas.get(rutasOrdenadas.firstKey()));
+                    }
+                    // Si el recorrido es máximo
+                    else {
+                        mensaje.append(rutasOrdenadas.get(rutasOrdenadas.lastKey()));
+                    }
                 }
-                // Si el recorrido es máximo
                 else {
-                    mensaje.append(rutasOrdenadas.get(rutasOrdenadas.lastKey()));
+                    mensaje.append("No es posible llegar al destino desde la ubicación origen.");
                 }
+
 
             } else {
                 mensaje.append("La ubicación origen se encuentra aislada.");
